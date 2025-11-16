@@ -70,7 +70,6 @@ const LABELS = {
   endsem_practical_external: "End Sem Practical External (out of 40)"
 };
 
-// -----------------------------------------------------
 const clamp = (v, min = 0, max = Infinity) => {
   const x = Number(v);
   return isNaN(x) ? 0 : Math.max(min, Math.min(max, x));
@@ -165,7 +164,7 @@ export default function App() {
     return () => window.removeEventListener("mousemove", move);
   }, []);
 
-    // ---------------- Compute ----------------
+  // ---------------- Compute ----------------
   function compute(){
     let internal = 0;
     const rows = [];
@@ -199,7 +198,7 @@ export default function App() {
   const finalDisplay = useAnimatedNumber(result ? result.final : 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-black p-6 text-white relative" style={{cursor:"none"}}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-black p-3 sm:p-6 text-white relative">
 
       {/* --------- NEON COMET CURSOR --------- */}
       <div ref={cursorRef} className="comet-cursor"></div>
@@ -212,8 +211,10 @@ export default function App() {
 
       {/* CSS */}
       <style>{`
-        /* Hide real cursor on desktop (mobile disabled in useEffect) */
-        body, * { cursor: none !important; }
+        /* Cursor only hidden on desktop */
+        @media (hover: hover) and (pointer: fine) {
+          body, * { cursor: none !important; }
+        }
 
         .comet-cursor {
           position: fixed;
@@ -247,15 +248,6 @@ export default function App() {
           width: 100%;
           height: 120%;
           pointer-events: none;
-          background-image:
-            radial-gradient(3px 3px at 20px 30px, white 70%, transparent 30%),
-            radial-gradient(4px 4px at 100px 80px, white 70%, transparent 30%),
-            radial-gradient(2px 2px at 200px 50px, white 70%, transparent 30%),
-            radial-gradient(3px 3px at 300px 150px, white 70%, transparent 30%),
-            radial-gradient(4px 4px at 400px 200px, white 70%, transparent 30%),
-            radial-gradient(3px 3px at 600px 120px, white 70%, transparent 30%),
-            radial-gradient(2px 2px at 800px 60px, white 70%, transparent 30%),
-            radial-gradient(4px 4px at 1000px 200px, white 70%, transparent 30%);
           background-size: 600px 600px;
           animation: fall 4s linear infinite;
           opacity: 0.8;
@@ -268,7 +260,7 @@ export default function App() {
         }
       `}</style>
 
-      {/* background particle layer */}
+      {/* Background particle */}
       <svg className="pointer-events-none absolute inset-0 w-full h-full opacity-30" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="g1" cx="50%" cy="30%" r="50%">
@@ -279,12 +271,12 @@ export default function App() {
         <rect width="100%" height="100%" fill="url(#g1)" />
       </svg>
 
-      <div className="max-w-6xl mx-auto backdrop-blur-xl bg-white/5 p-1 rounded-3xl shadow-2xl border border-white/10 relative overflow-hidden">
+      <div className="max-w-6xl mx-auto backdrop-blur-xl bg-white/5 p-2 sm:p-4 rounded-3xl shadow-2xl border border-white/10 relative overflow-hidden">
 
         {/* Header */}
-        <header className="flex items-center justify-between gap-4 px-6 py-4 bg-gradient-to-r from-indigo-900/30 to-violet-900/10 backdrop-blur-md border-b border-white/5">
+        <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-indigo-900/30 to-violet-900/10 backdrop-blur-md border-b border-white/5">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-fuchsia-300 to-emerald-300">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-fuchsia-300 to-emerald-300">
               Internal Marks Calculator
             </h1>
             <div className="text-xs text-white/60 mt-1">
@@ -292,12 +284,16 @@ export default function App() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="text-xs text-white/60 mr-2">Mode</div>
-            <div className="flex gap-2">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="text-xs text-white/60">Mode</div>
+            <div className="flex gap-1 sm:gap-2">
               {['theory','hybrid','practical'].map(m=> (
                 <button key={m} onClick={()=>{ setMode(m); reset(); }}
-                  className={`px-3 py-1 rounded-full text-sm font-semibold transition-all ${mode===m? 'bg-indigo-600 text-white ring-1 ring-indigo-400 scale-105':'bg-white/10 text-white/70 hover:bg-white/20'}`}>
+                  className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold transition-all ${
+                    mode===m
+                      ? 'bg-indigo-600 text-white ring-1 ring-indigo-400 scale-105'
+                      : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  }`}>
                   {m.toUpperCase()}
                 </button>
               ))}
@@ -306,94 +302,93 @@ export default function App() {
         </header>
 
         {/* Main grid */}
-        <main className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <main className="p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
 
-          {/* Input cards */}
-          <section className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Inputs */}
+          <section className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {INPUTS[mode].map(k=> (
-              <label key={k} className="relative group bg-gradient-to-br from-white/6 to-white/3 rounded-xl p-4 border border-white/6 hover:scale-105 transform transition">
+              <label key={k} className="relative group bg-gradient-to-br from-white/6 to-white/3 rounded-xl p-3 sm:p-4 border border-white/6 hover:scale-105 transition">
                 <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-purple-500/8 to-cyan-400/8 opacity-0 group-hover:opacity-100 transition blur-xl"></div>
                 <div className="relative z-10">
-                  <div className="text-sm text-white/80 font-medium">{LABELS[k]}</div>
+                  <div className="text-xs sm:text-sm text-white/80 font-medium">{LABELS[k]}</div>
                   <input type="number" min={0} max={MAX[k]} value={input[k]}
                     onChange={(e)=> setInput({...input,[k]: e.target.value})}
-                    className="mt-2 w-full p-3 rounded-lg bg-black/60 border border-white/8 text-white" />
+                    className="mt-1 sm:mt-2 w-full p-2 sm:p-3 rounded-lg bg-black/60 border border-white/8 text-white text-sm sm:text-base" />
                   <div className="text-xs text-white/40 mt-1">max: {MAX[k]}</div>
                 </div>
               </label>
             ))}
 
             {(mode==='theory' || mode==='hybrid') && (
-              <div className="bg-gradient-to-br from-yellow-400/6 to-yellow-400/12 rounded-xl p-4 border border-yellow-200/6">
-                <div className="text-sm text-white/80">End Sem Written (External — out of 60)</div>
+              <div className="bg-gradient-to-br from-yellow-400/6 to-yellow-400/12 rounded-xl p-3 sm:p-4 border border-yellow-200/6">
+                <div className="text-xs sm:text-sm text-white/80">End Sem Written (out of 60)</div>
                 <input type="number" min={0} max={60} value={input.endsem_written}
                   onChange={(e)=> setInput({...input,endsem_written: e.target.value})}
-                  className="mt-2 w-full p-3 rounded-lg bg-black/60 border border-white/8 text-white" />
+                  className="mt-1 sm:mt-2 w-full p-2 sm:p-3 rounded-lg bg-black/60 border border-white/8 text-white text-sm sm:text-base" />
               </div>
             )}
 
             {mode==='practical' && (
-              <div className="bg-gradient-to-br from-rose-400/6 to-rose-400/12 rounded-xl p-4 border border-rose-200/6">
-                <div className="text-sm text-white/80">End Sem Practical External (out of 40)</div>
+              <div className="bg-gradient-to-br from-rose-400/6 to-rose-400/12 rounded-xl p-3 sm:p-4 border border-rose-200/6">
+                <div className="text-xs sm:text-sm text-white/80">External Practical (out of 40)</div>
                 <input type="number" min={0} max={40} value={input.endsem_practical_external}
                   onChange={(e)=> setInput({...input,endsem_practical_external: e.target.value})}
-                    className="mt-2 w-full p-3 rounded-lg bg-black/60 border border-white/8 text-white" />
+                  className="mt-1 sm:mt-2 w-full p-2 sm:p-3 rounded-lg bg-black/60 border border-white/8 text-white text-sm sm:text-base" />
               </div>
             )}
-            </section>
+          </section>
 
           {/* Result / Controls */}
-          <aside className="rounded-2xl p-6 bg-gradient-to-br from-white/6 to-white/3 border border-white/6 shadow-lg flex flex-col justify-between">
+          <aside className="rounded-2xl p-4 sm:p-6 bg-gradient-to-br from-white/6 to-white/3 border border-white/6 shadow-lg flex flex-col justify-between">
             <div>
-              <div className="text-sm text-white/60">Internal • External • Final</div>
-              <div className="mt-4 grid grid-cols-1 gap-3">
-                
+              <div className="text-xs sm:text-sm text-white/60">Internal • External • Final</div>
+              <div className="mt-3 sm:mt-4 grid gap-2 sm:gap-3">
+
                 <div className="flex items-center justify-between">
                   <div className="text-xs text-white/60">Internal</div>
-                  <div className="text-3xl font-extrabold text-indigo-200">{internalDisplay}</div>
+                  <div className="text-2xl sm:text-3xl font-extrabold text-indigo-200">{internalDisplay}</div>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div className="text-xs text-white/60">External</div>
-                  <div className="text-3xl font-extrabold text-amber-200">{externalDisplay}</div>
+                  <div className="text-2xl sm:text-3xl font-extrabold text-amber-200">{externalDisplay}</div>
                 </div>
 
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/5">
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
                   <div>
                     <div className="text-xs text-white/60">Final Score</div>
-                    <div className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-100">
+                    <div className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-100">
                       {finalDisplay} / 100
                     </div>
                   </div>
 
                   <div className="flex flex-col items-end gap-2">
-                    <button 
-                      onClick={compute} 
-                      className="px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-violet-400 text-white font-semibold shadow hover:scale-105 transition"
+                    <button
+                      onClick={compute}
+                      className="px-3 sm:px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-violet-400 text-white font-semibold shadow hover:scale-105 transition"
                     >
                       Compute
                     </button>
 
-                    <button 
-                      onClick={reset} 
+                    <button
+                      onClick={reset}
                       className="px-3 py-2 rounded-full bg-white/6 text-white/80 hover:bg-white/10 transition"
                     >
                       Reset
                     </button>
                   </div>
-
                 </div>
               </div>
             </div>
 
             {result && (
-              <div className="mt-6 bg-black/30 p-3 rounded-lg border border-white/6">
-                <div className="text-xs text-white/70 mb-2">Breakdown (internal contributions)</div>
-                <div className="text-sm text-white/90 max-h-40 overflow-auto">
-                  {result.rows.map(r=> (
-                    <div key={r.key} className="flex justify-between py-1 border-b border-white/3 last:border-b-0">
-                      <div className="text-xs">{r.label}</div>
-                      <div className="text-xs font-mono">{r.contrib.toFixed(2)}</div>
+              <div className="mt-4 bg-black/30 p-3 sm:p-4 rounded-lg border border-white/6">
+                <div className="text-xs text-white/70 mb-1">Breakdown</div>
+                <div className="text-xs sm:text-sm text-white/90 max-h-40 overflow-auto">
+                  {result.rows.map(r => (
+                    <div key={r.key} className="flex justify-between py-1 border-b border-white/5 last:border-none">
+                      <div>{r.label}</div>
+                      <div className="font-mono">{r.contrib.toFixed(2)}</div>
                     </div>
                   ))}
                 </div>
@@ -406,9 +401,7 @@ export default function App() {
           </aside>
 
         </main>
-
       </div>
     </div>
   );
 }
-
